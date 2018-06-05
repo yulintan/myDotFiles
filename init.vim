@@ -1,4 +1,5 @@
 
+
 set clipboard=unnamed
 set nocompatible              " be iMproved, required
 filetype off                  " required
@@ -17,7 +18,7 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-Plugin 'phpactor/phpactor'
+" Plugin 'phpactor/phpactor'
 
 Plugin 'christoomey/vim-tmux-navigator'
 " The following are examples of different formats supported.
@@ -29,7 +30,6 @@ Plugin 'tpope/vim-fugitive'
 " Git plugin not hosted on GitHub
 Plugin 'git://git.wincent.com/command-t.git'
 " git repos on your local machine (i.e. when working on your own plugin)
-Plugin 'file:///home/gmarik/path/to/plugin'
 " The sparkup vim script is in a subdirectory of this repo called vim.
 " Pass the path to set the runtimepath properly.
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
@@ -39,7 +39,7 @@ Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 
 " Plugin 'Valloric/YouCompleteMe'
 
-
+Plugin 'w0rp/ale'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -119,6 +119,16 @@ Plug 'avelino/vim-bootstrap-updater'
 Plug 'sheerun/vim-polyglot'
 Plug 'Valloric/YouCompleteMe'
 Plug 'tmux-plugins/vim-tmux'
+
+"Language Server Protocol (LSP) support for vim and neovim.
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
+" (Optional) Multi-entry selection UI.
+Plug 'junegunn/fzf'
+
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 if isdirectory('/usr/local/opt/fzf')
@@ -126,6 +136,16 @@ Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 else
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
+
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+
+endif
+let g:deoplete#enable_at_startup = 1
 endif
 let g:make = 'gmake'
 if exists('make')
@@ -186,6 +206,9 @@ Plug 'thoughtbot/vim-rspec'
 Plug 'ecomba/vim-ruby-refactoring'
 
 
+Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+
+
 "*****************************************************************************
 "*****************************************************************************
 
@@ -195,6 +218,7 @@ source ~/.vimrc.local.bundles
 endif
 
 call plug#end()
+
 
 " Required:
 filetype plugin indent on
@@ -782,11 +806,16 @@ nmap <Leader>cc :call phpactor#ClassNew()<CR>
 
 " Extract method from selection
 vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
+"*********************
 
 inoremap <C-space> <C-x><C-o>
 inoremap <C-@> <C-space>
 
+"Omni-completion
 autocmd FileType php setlocal omnifunc=phpactor#Complete
+let g:phpactorOmniError = v:true
+
+
 "
 " Prompt for a command to run
 map <Leader>vp :VimuxPromptCommand<CR>
@@ -795,3 +824,72 @@ map <Leader>vp :VimuxPromptCommand<CR>
 autocmd FileType go nmap <leader>b  <Plug>(go-build)
 
 hi Visual ctermbg=100
+
+" " In ~/.vim/vimrc, or somewhere similar.
+"  let g:ale_fixers = {
+"  \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+"  \   'javascript': ['eslint', 'importjs', 'prettier', 'prettier_eslint', 'prettier_standard', 'standard', 'xo'],
+"  \   'GO': ['gofmt', 'go build'],
+"  \}
+"  " In ~/.vim/vimrc, or somewhere similar.
+"  let g:ale_linters = {
+"  \   'javascript': ['eslint'],
+"  \}
+
+" " let g:ale_linters = {'go': ['gometalinter', 'gofmt']}
+
+
+autocmd FileType netrw setl bufhidden=delete
+
+
+set rtp+=$GOPATH/src/golang.org/x/lint/misc/vim
+
+""auto add newline for {
+""----------------------------------------------
+"" bracket matching and more !!!!
+""----------------------------------------------
+"inoremap ( ()<Esc>:call BC_AddChar(")")<CR>i
+"inoremap { {<CR>}<Esc>:call BC_AddChar("}")<CR><Esc>kA<CR>
+"inoremap [ []<Esc>:call BC_AddChar("]")<CR>i
+"inoremap " ""<Esc>:call BC_AddChar("\"")<CR>i
+"" jump out of parenthesis
+"inoremap <C-j> <Esc>:call search(BC_GetChar(), "W")<CR>a
+
+"function! BC_AddChar(schar)
+" if exists("b:robstack")
+" let b:robstack = b:robstack . a:schar
+" else
+" let b:robstack = a:schar
+" endif
+"endfunction
+
+"function! BC_GetChar()
+" let l:char = b:robstack[strlen(b:robstack)-1]
+" let b:robstack = strpart(b:robstack, 0, strlen(b:robstack)-1)
+" return l:char
+"endfunction
+
+" Use deoplete.
+let g:deoplete#enable_at_startup = 1
+
+" Error and warning signs.
+let g:ale_sign_error = '⤫'
+let g:ale_sign_warning = '⚠'
+" Enable integration with airline.
+let g:airline#extensions#ale#enabled = 1
+
+let g:go_auto_sameids = 1
+
+"list all the func in side of one file
+set runtimepath^=~/.vim/bundle/ctrlp.vim
+au FileType go nmap <leader>gt :GoDeclsDir<cr>
+
+let g:go_auto_type_info = 1
+
+"Tern stuff
+"enable keyboard shortcuts
+let g:tern_map_keys=1
+"show argument hints
+let g:tern_show_argument_hints='on_hold'
+
+nmap gx yiw/^\(sub\<Bar>function\)\s\+<C-R>"<CR>
