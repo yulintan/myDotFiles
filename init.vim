@@ -116,7 +116,7 @@ Plug 'majutsushi/tagbar'
 Plug 'scrooloose/syntastic'
 Plug 'Yggdroot/indentLine'
 Plug 'avelino/vim-bootstrap-updater'
-" Plug 'sheerun/vim-polyglot'
+Plug 'sheerun/vim-polyglot'
 Plug 'Valloric/YouCompleteMe'
 Plug 'tmux-plugins/vim-tmux'
 
@@ -129,7 +129,7 @@ Plug 'autozimu/LanguageClient-neovim', {
 " (Optional) Multi-entry selection UI.
 Plug 'junegunn/fzf'
 
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 if isdirectory('/usr/local/opt/fzf')
 Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -137,15 +137,15 @@ else
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 
-" if has('nvim')
-"   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" else
-"   Plug 'Shougo/deoplete.nvim'
-"   Plug 'roxma/nvim-yarp'
-"   Plug 'roxma/vim-hug-neovim-rpc'
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
 
-" endif
-" let g:deoplete#enable_at_startup = 1
+endif
+let g:deoplete#enable_at_startup = 1
 
 
 endif
@@ -209,6 +209,8 @@ Plug 'ecomba/vim-ruby-refactoring'
 
 
 Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+
+
 
 
 "*****************************************************************************
@@ -512,8 +514,8 @@ if executable('rg')
 endif
 
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
-nnoremap <silent> <leader>b :Buffers<CR>
-nnoremap <silent> <leader>e :FZF -m<CR>
+" nnoremap <silent> <leader>b :Buffers<CR>
+" nnoremap <silent> <leader>e :FZF -m<CR>
 
 " snippets
 let g:UltiSnipsExpandTrigger="<tab>"
@@ -556,10 +558,10 @@ if has('macunix')
 endif
 
 "" Buffer nav
-noremap <leader>z :bp<CR>
-noremap <leader>q :bp<CR>
-noremap <leader>x :bn<CR>
-noremap <leader>w :bn<CR>
+" noremap <leader>z :bp<CR>
+" noremap <leader>q :bp<CR>
+" noremap <leader>x :bn<CR>
+" noremap <leader>w :bn<CR>
 
 "" Close buffer
 noremap <leader>c :bd<CR>
@@ -643,7 +645,6 @@ augroup go
   au FileType go nmap <leader>r  <Plug>(go-run)
   au FileType go nmap <leader>t  <Plug>(go-test)
   au FileType go nmap <Leader>gt <Plug>(go-coverage-toggle)
-  au FileType go nmap <Leader>i <Plug>(go-info)
   au FileType go nmap <silent> <Leader>l <Plug>(go-metalinter)
   au FileType go nmap <C-g> :GoDecls<cr>
   au FileType go nmap <leader>dr :GoDeclsDir<cr>
@@ -827,18 +828,18 @@ autocmd FileType go nmap <leader>b  <Plug>(go-build)
 
 hi Visual ctermbg=100
 
-" " In ~/.vim/vimrc, or somewhere similar.
-"  let g:ale_fixers = {
-"  \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-"  \   'javascript': ['eslint', 'importjs', 'prettier', 'prettier_eslint', 'prettier_standard', 'standard', 'xo'],
-"  \   'GO': ['gofmt', 'go build'],
-"  \}
-"  " In ~/.vim/vimrc, or somewhere similar.
-"  let g:ale_linters = {
-"  \   'javascript': ['eslint'],
-"  \}
+" In ~/.vim/vimrc, or somewhere similar.
+ let g:ale_fixers = {
+ \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+ \   'javascript': ['eslint', 'importjs', 'prettier', 'prettier_eslint', 'prettier_standard', 'standard', 'xo'],
+ \   'GO': ['gofmt', 'go build'],
+ \}
+ " In ~/.vim/vimrc, or somewhere similar.
+ let g:ale_linters = {
+ \   'javascript': ['eslint'],
+ \}
 
-" " let g:ale_linters = {'go': ['gometalinter', 'gofmt']}
+" let g:ale_linters = {'go': ['gometalinter', 'gofmt']}
 
 
 autocmd FileType netrw setl bufhidden=delete
@@ -884,14 +885,7 @@ let g:go_auto_sameids = 1
 
 "list all the func in side of one file
 set runtimepath^=~/.vim/bundle/ctrlp.vim
-au FileType go nmap <leader>gt :GoDeclsDir<cr>
 
 let g:go_auto_type_info = 1
 
-"Tern stuff
-"enable keyboard shortcuts
-let g:tern_map_keys=1
-"show argument hints
-let g:tern_show_argument_hints='on_hold'
-
-nmap gx yiw/^\(sub\<Bar>function\)\s\+<C-R>"<CR>
+" nmap gx yiw/^\(sub\<Bar>function\)\s\+<C-R>"<CR>
