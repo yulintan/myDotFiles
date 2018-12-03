@@ -795,3 +795,5 @@ map <Leader>vp :VimuxPromptCommand<CR>
 autocmd FileType go nmap <leader>b  <Plug>(go-build)
 
 hi Visual ctermbg=100
+
+let g:go_auto_type_info = 1

@@ -825,6 +825,7 @@ map <Leader>vp :VimuxPromptCommand<CR>
 
 "leader b for build in go
 autocmd FileType go nmap <leader>b  <Plug>(go-build)
+autocmd FileType go nmap <Leader>i <Plug>(go-info)
 
 hi Visual ctermbg=100
 
@@ -887,5 +888,7 @@ let g:go_auto_sameids = 1
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 
 let g:go_auto_type_info = 1
+set updatetime=800
 
 " nmap gx yiw/^\(sub\<Bar>function\)\s\+<C-R>"<CR>
+" let g:polyglot_disabled = ['go']
