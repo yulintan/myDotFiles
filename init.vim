@@ -6,57 +6,11 @@ filetype off                  " required
 
 imap jk <Esc>
 
+" yank to end
+nnoremap Y y$
 nnoremap <Tab> :bn<CR>
 nnoremap <S-Tab> :bN<CR>
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-
-" Plugin 'phpactor/phpactor'
-
-Plugin 'christoomey/vim-tmux-navigator'
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
-Plugin 'tpope/vim-fugitive'
-" plugin from http://vim-scripts.org/vim/scripts.html
-" Plugin 'L9'
-" Git plugin not hosted on GitHub
-Plugin 'git://git.wincent.com/command-t.git'
-" git repos on your local machine (i.e. when working on your own plugin)
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-" Install L9 and avoid a Naming conflict if you've already installed a
-" different version somewhere else.
-" Plugin 'ascenator/L9', {'name': 'newL9'}
-
-" Plugin 'Valloric/YouCompleteMe'
-
-Plugin 'w0rp/ale'
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
-
-"=============================================================================
 let g:tmux_navigator_no_mappings = 1
 
 nnoremap <silent> {Left-Mapping} :TmuxNavigateLeft<cr>
@@ -102,7 +56,7 @@ call plug#begin(expand('~/.vim/plugged'))
 "" Plug install packages
 "*****************************************************************************
 Plug 'scrooloose/nerdtree'
-Plug 'jistr/vim-nerdtree-tabs'
+" Plug 'jistr/vim-nerdtree-tabs'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
@@ -113,12 +67,17 @@ Plug 'vim-scripts/CSApprox'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'Raimondi/delimitMate'
 Plug 'majutsushi/tagbar'
-Plug 'scrooloose/syntastic'
 Plug 'Yggdroot/indentLine'
 Plug 'avelino/vim-bootstrap-updater'
 Plug 'sheerun/vim-polyglot'
 Plug 'Valloric/YouCompleteMe'
 Plug 'tmux-plugins/vim-tmux'
+Plug 'vim-syntastic/syntastic'
+Plug 'dense-analysis/ale'
+" Plug 'yulintan/vim-php'
+Plug 'janko/vim-test'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+
 
 "Language Server Protocol (LSP) support for vim and neovim.
 Plug 'autozimu/LanguageClient-neovim', {
@@ -145,8 +104,11 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 
 endif
-let g:deoplete#enable_at_startup = 1
 
+" Use deoplete.
+let g:deoplete#enable_at_startup = 1
+set completeopt+=noinsert
+autocmd FileType go call deoplete#custom#option('auto_complete', v:false)
 
 endif
 let g:make = 'gmake'
@@ -209,8 +171,14 @@ Plug 'ecomba/vim-ruby-refactoring'
 
 
 Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+" Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer run-script parse-stubs'} // too slow to use
 
-
+Plug 'zchee/vim-go-slide'
+Plug 'christianrondeau/vim-base64'
+Plug 'stephpy/vim-php-cs-fixer'
+Plug 'rstacruz/sparkup'
+Plug 'hashivim/vim-terraform'
+Plug 'kshenoy/vim-signature'
 
 
 "*****************************************************************************
@@ -312,7 +280,6 @@ let g:indentLine_enabled = 1
 let g:indentLine_concealcursor = 0
 let g:indentLine_char = '┆'
 let g:indentLine_faster = 1
-
 
 if $COLORTERM == 'gnome-terminal'
 set term=gnome-256color
@@ -463,12 +430,14 @@ set autoread
 
 "" Split
 noremap <Leader>h :<C-u>split<CR>
-noremap <Leader>v :<C-u>vsplit<CR>
+" noremap <Leader>v :<C-u>vsplit<CR>
 
 "" Git
 noremap <Leader>ga :Gwrite<CR>
 noremap <Leader>gc :Gcommit<CR>
+noremap <Leader>gca :Gcommit --am<CR>
 noremap <Leader>gsh :Gpush<CR>
+noremap <Leader>gshf :Gpush -f<CR>
 noremap <Leader>gll :Gpull<CR>
 noremap <Leader>gs :Gstatus<CR>
 noremap <Leader>gb :Gblame<CR>
@@ -490,10 +459,10 @@ nnoremap <silent> <S-t> :tabnew<CR>
 nnoremap <leader>. :lcd %:p:h<CR>
 
 "" Opens an edit command with the path of the currently edited file filled in
-noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
+" noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 
 "" Opens a tab edit command with the path of the currently edited file filled
-noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
+" noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
 
 "" fzf.vim
 set wildmode=list:longest,list:full
@@ -564,7 +533,17 @@ endif
 " noremap <leader>w :bn<CR>
 
 "" Close buffer
-noremap <leader>c :bd<CR>
+
+if has('vim_starting')
+set nocompatible               " Be iMproved
+endif
+
+let t:NERDTreeBufName = get(t:, '', "default")
+
+" close buffer and nerdtree if it is open
+" noremap <expr> <leader>c (bufwinnr(t:NERDTreeBufName) == 1 && bufname("") != "NERD_tree_1" && bufname("") != "NERD_tree_2"  ? ":NERDTreeClose\| bd!<CR>" : ":bd!<CR>" )
+"
+noremap <leader>c :bd!<CR>
 
 "" Clean search (highlight)
 nnoremap <silent> <leader><space> :noh<cr>
@@ -620,6 +599,9 @@ let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 let g:go_highlight_extra_types = 1
+let g:go_fmt_options = {
+   \ 'goimports': '--local git-lab.boldapps.net',
+\ }
 
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 
@@ -643,7 +625,7 @@ augroup go
   au FileType go nmap <Leader>db <Plug>(go-doc-browser)
 
   au FileType go nmap <leader>r  <Plug>(go-run)
-  au FileType go nmap <leader>t  <Plug>(go-test)
+  " au FileType go nmap <leader>t  <Plug>(go-test)
   au FileType go nmap <Leader>gt <Plug>(go-coverage-toggle)
   au FileType go nmap <silent> <Leader>l <Plug>(go-metalinter)
   au FileType go nmap <C-g> :GoDecls<cr>
@@ -696,10 +678,10 @@ let g:tagbar_type_ruby = {
 \ }
 
 " RSpec.vim mappings
-map <Leader>t :call RunCurrentSpecFile()<CR>
-map <Leader>s :call RunNearestSpec()<CR>
-map <Leader>l :call RunLastSpec()<CR>
-map <Leader>a :call RunAllSpecs()<CR>
+" map <Leader>t :call RunCurrentSpecFile()<CR>
+" map <Leader>s :call RunNearestSpec()<CR>
+" map <Leader>l :call RunLastSpec()<CR>
+" map <Leader>a :call RunAllSpecs()<CR>
 
 " For ruby refactory
 if has('nvim')
@@ -791,32 +773,9 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 
 " set autochdir
 
-"phpactor
-" Include use statement
-nmap <Leader>u :call phpactor#UseAdd()<CR>
-
-" Invoke the context menu
-nmap <Leader>mm :call phpactor#ContextMenu()<CR>
-
-" Goto definition of class or class member under the cursor
-nmap <Leader>o :call phpactor#GotoDefinition()<CR>
-
-" Transform the classes in the current file
-nmap <Leader>tt :call phpactor#Transform()<CR>
-
-" Generate a new class (replacing the current file)
-nmap <Leader>cc :call phpactor#ClassNew()<CR>
-
-" Extract method from selection
-vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
-"*********************
 
 inoremap <C-space> <C-x><C-o>
 inoremap <C-@> <C-space>
-
-"Omni-completion
-autocmd FileType php setlocal omnifunc=phpactor#Complete
-let g:phpactorOmniError = v:true
 
 
 "
@@ -826,6 +785,8 @@ map <Leader>vp :VimuxPromptCommand<CR>
 "leader b for build in go
 autocmd FileType go nmap <leader>b  <Plug>(go-build)
 autocmd FileType go nmap <Leader>i <Plug>(go-info)
+
+nnoremap <leader>ie :GoIfErr <CR>
 
 hi Visual ctermbg=100
 
@@ -838,6 +799,7 @@ hi Visual ctermbg=100
  " In ~/.vim/vimrc, or somewhere similar.
  let g:ale_linters = {
  \   'javascript': ['eslint'],
+ \ 'go': ['gopls'],
  \}
 
 " let g:ale_linters = {'go': ['gometalinter', 'gofmt']}
@@ -873,22 +835,153 @@ set rtp+=$GOPATH/src/golang.org/x/lint/misc/vim
 " return l:char
 "endfunction
 
-" Use deoplete.
-let g:deoplete#enable_at_startup = 1
-
 " Error and warning signs.
 let g:ale_sign_error = '⤫'
 let g:ale_sign_warning = '⚠'
 " Enable integration with airline.
 let g:airline#extensions#ale#enabled = 1
 
-let g:go_auto_sameids = 1
+let g:go_auto_sameids = 0
 
 "list all the func in side of one file
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 
-let g:go_auto_type_info = 1
+let g:go_auto_type_info = 0
 set updatetime=800
 
 " nmap gx yiw/^\(sub\<Bar>function\)\s\+<C-R>"<CR>
 " let g:polyglot_disabled = ['go']
+
+
+nnoremap <leader>ca :w <bar> %bd <bar> e# <bar> bd# <CR>
+
+"hilight golang present slides
+autocmd BufRead,BufNewFile *.slide set filetype=slide
+
+
+" https://github.com/golang/lint
+set rtp+=/Users/yulin/go/src/golang.org/x/lint/misc/vim
+" auto lint
+" autocmd BufWritePost,FileWritePost *.go execute 'Lint' | cwindow
+
+" get rid of arrwo key
+inoremap <C-h> <Left>
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+inoremap <C-l> <Right>
+cnoremap <C-h> <Left>
+cnoremap <C-j> <Down>
+
+" let g:go_def_mode='gopls'
+" let g:go_info_mode='gopls'
+" let g:deoplete#omni_patterns = {}
+
+" Terraform stuff
+" call deoplete#custom#option('omni_patterns', {
+" \ 'complete_method': 'omnifunc',
+" \ 'terraform': '[^ *\t"{=$]\w*',
+" \})
+
+" call deoplete#initialize()
+
+let g:terraform_align=1
+" let g:terraform_fold_sections=1
+let g:terraform_fmt_on_save=1
+
+
+
+" PHP stuff
+"
+"phpactor
+" Include use statement
+
+let g:phpactorPhpBin = 'php'
+let g:phpactorBranch = 'master'
+let g:phpactorOmniAutoClassImport = v:true
+"Omni-completion
+autocmd FileType php setlocal omnifunc=phpactor#Complete
+let g:phpactorOmniError = v:true
+
+autocmd FileType php nmap <Leader>u :call phpactor#UseAdd()<CR>
+
+" Invoke the context menu
+autocmd FileType php nmap <Leader>mm :call phpactor#ContextMenu()<CR>
+
+" Invoke the navigation menu
+autocmd FileType php nmap <Leader>nn :call phpactor#Navigate()<CR>
+
+" Goto definition of class or class member under the cursor
+autocmd FileType php nnoremap gd :call phpactor#GotoDefinition()<CR>
+
+autocmd FileType php nnoremap gf :call phpactor#FindReferences()<CR>
+
+" Transform the classes in the current file
+autocmd FileType php nmap <Leader>tt :call phpactor#Transform()<CR>
+
+" Generate a new class (replacing the current file)
+autocmd FileType php nmap <Leader>cc :call phpactor#ClassNew()<CR>
+
+" Extract expression (normal mode)
+autocmd FileType php nmap <silent><Leader>ee :call phpactor#ExtractExpression(v:false)<CR>
+
+" Extract expression from selection
+autocmd FileType php vmap <silent><Leader>ee :<C-U>call phpactor#ExtractExpression(v:true)<CR>
+
+" Extract method from selection
+autocmd FileType php vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
+
+autocmd FileType php nmap <Leader>i :call phpactor#Hover() <CR>
+
+"*********************
+"
+
+" nnoremap <leader>fx :call PHPCSFixer()<CR>
+
+" Running test for PHP and Golang
+nnoremap <leader>t  :w <bar> :TestNearest --debug<CR>
+" nmap <silent> t<C-f> :TestFile<CR>
+" nmap <silent> t<C-s> :TestSuite<CR>
+" nmap <silent> t<C-l> :TestLast<CR>
+" nmap <silent> t<C-g> :TestVisit<CR>
+"
+nnoremap <leader>r :source ~/.config/nvim/init.vim<CR>
+
+set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
+		  \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
+		  \,sm:block-blinkwait175-blinkoff150-blinkon175
+
+" php-cs-fixer
+" let g:php_cs_fixer_config_file = '.php_cs'
+let g:php_cs_fixer_path = "/Users/yulin/dev/cashier/back-end/vendor/bin/php-cs-fixer"
+let g:php_cs_fixer_verbose = 0                    " Return the output of command if 1, else an inline information.
+let g:php_cs_fixer_dry_run = 0                    " Call command with dry-run option
+nnoremap <silent><leader>pcf :call PhpCsFixerFixFile()<CR>
+augroup php-cs-fixer-autogroup
+    autocmd!
+    autocmd BufWritePost * if getcwd() == '/Users/yulin/dev/cashier/back-end' && expand('%:e') == 'php' | silent call PhpCsFixerFixFile() | endif
+augroup END
+
+" copy current file name (relative/absolute) to system clipboard (Linux version)
+if has("gui_gtk") || has("gui_gtk2") || has("gui_gnome") || has("unix")
+  " relative path (src/foo.txt)
+  nnoremap <leader>cp :let @+=expand("%")<CR>
+
+  " absolute path (/something/src/foo.txt)
+  nnoremap <leader>cf :let @+=expand("%:p")<CR>
+
+  " filename (foo.txt)
+  " nnoremap <leader>ct :let @+=expand("%:t")<CR>
+
+  " directory name (/something/src)
+  " nnoremap <leader>ch :let @+=expand("%:p:h")<CR>
+endif
+
+" open current file in a new tmux pane
+noremap <Leader>v :call OpenCurrent()<CR>
+function! OpenCurrent()
+    exe 'silent !tmux split-window -h -c "' . getcwd() . '" "nvim '. expand("%") .'"'
+endfunction
+
+" vim-commentary
+autocmd FileType yaml setlocal commentstring=#\ %s
+autocmd FileType php setlocal commentstring=//\ %s
