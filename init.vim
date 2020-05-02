@@ -127,7 +127,7 @@ endif
 
 if v:version >= 704
 "" Snippets
-Plug 'SirVer/ultisnips'
+" Plug 'SirVer/ultisnips'
 endif
 
 Plug 'honza/vim-snippets'
@@ -179,6 +179,8 @@ Plug 'stephpy/vim-php-cs-fixer'
 Plug 'rstacruz/sparkup'
 Plug 'hashivim/vim-terraform'
 Plug 'kshenoy/vim-signature'
+
+" Plug 'itchyny/lightline.vim'
 
 
 "*****************************************************************************
@@ -543,7 +545,8 @@ let t:NERDTreeBufName = get(t:, '', "default")
 " close buffer and nerdtree if it is open
 " noremap <expr> <leader>c (bufwinnr(t:NERDTreeBufName) == 1 && bufname("") != "NERD_tree_1" && bufname("") != "NERD_tree_2"  ? ":NERDTreeClose\| bd!<CR>" : ":bd!<CR>" )
 "
-noremap <leader>c :bd!<CR>
+noremap <leader>q :bd!<CR>
+nnoremap <leader>qa :w <bar> %bd <bar> e# <bar> bd# <CR>
 
 "" Clean search (highlight)
 nnoremap <silent> <leader><space> :noh<cr>
@@ -624,7 +627,7 @@ augroup go
   au FileType go nmap <Leader>dv <Plug>(go-doc-vertical)
   au FileType go nmap <Leader>db <Plug>(go-doc-browser)
 
-  au FileType go nmap <leader>r  <Plug>(go-run)
+  " au FileType go nmap <leader>r  <Plug>(go-run)
   " au FileType go nmap <leader>t  <Plug>(go-test)
   au FileType go nmap <Leader>gt <Plug>(go-coverage-toggle)
   au FileType go nmap <silent> <Leader>l <Plug>(go-metalinter)
@@ -660,11 +663,11 @@ let g:rubycomplete_buffer_loading = 1
 let g:rubycomplete_classes_in_global = 1
 let g:rubycomplete_rails = 1
 
-augroup vimrc-ruby
-  autocmd!
-  autocmd BufNewFile,BufRead *.rb,*.rbw,*.gemspec setlocal filetype=ruby
-  autocmd FileType ruby set tabstop=2|set shiftwidth=2|set expandtab softtabstop=2
-augroup END
+" augroup vimrc-ruby
+"   autocmd!
+"   autocmd BufNewFile,BufRead *.rb,*.rbw,*.gemspec setlocal filetype=ruby
+"   autocmd FileType ruby set tabstop=2|set shiftwidth=2|set expandtab softtabstop=2
+" augroup END
 
 let g:tagbar_type_ruby = {
     \ 'kinds' : [
@@ -786,6 +789,18 @@ map <Leader>vp :VimuxPromptCommand<CR>
 autocmd FileType go nmap <leader>b  <Plug>(go-build)
 autocmd FileType go nmap <Leader>i <Plug>(go-info)
 
+autocmd FileType go nmap <leader>ru :call GoRunMain()<CR>
+fun! GoRunMain() abort
+    if has('nvim')
+        echo "neovim"
+        -tabnew
+    call termopen("go run main.go")
+    startinsert
+    else
+        echo "not implemented"
+    endif
+endfun
+
 nnoremap <leader>ie :GoIfErr <CR>
 
 hi Visual ctermbg=100
@@ -853,7 +868,6 @@ set updatetime=800
 " let g:polyglot_disabled = ['go']
 
 
-nnoremap <leader>ca :w <bar> %bd <bar> e# <bar> bd# <CR>
 
 "hilight golang present slides
 autocmd BufRead,BufNewFile *.slide set filetype=slide
@@ -919,7 +933,7 @@ autocmd FileType php nnoremap gf :call phpactor#FindReferences()<CR>
 autocmd FileType php nmap <Leader>tt :call phpactor#Transform()<CR>
 
 " Generate a new class (replacing the current file)
-autocmd FileType php nmap <Leader>cc :call phpactor#ClassNew()<CR>
+" autocmd FileType php nmap <Leader>cc :call phpactor#ClassNew()<CR>
 
 " Extract expression (normal mode)
 autocmd FileType php nmap <silent><Leader>ee :call phpactor#ExtractExpression(v:false)<CR>
@@ -938,7 +952,20 @@ autocmd FileType php nmap <Leader>i :call phpactor#Hover() <CR>
 " nnoremap <leader>fx :call PHPCSFixer()<CR>
 
 " Running test for PHP and Golang
-nnoremap <leader>t  :w <bar> :TestNearest --debug<CR>
+nnoremap <leader>t  :w <bar> :TestNearest<CR>
+
+let test#go#ginkgo#options = '-v'
+let test#php#phpunit#options = '--debug'
+
+" function! EchoStrategy(cmd)
+"   echo 'It works! Command for running tests: ' . a:cmd
+
+"     exe '!'.a:cmd
+" endfunction
+
+" let g:test#custom_strategies = {'echo': function('EchoStrategy')}
+" let g:test#strategy = 'echo'
+
 " nmap <silent> t<C-f> :TestFile<CR>
 " nmap <silent> t<C-s> :TestSuite<CR>
 " nmap <silent> t<C-l> :TestLast<CR>
@@ -961,13 +988,27 @@ augroup php-cs-fixer-autogroup
     autocmd BufWritePost * if getcwd() == '/Users/yulin/dev/cashier/back-end' && expand('%:e') == 'php' | silent call PhpCsFixerFixFile() | endif
 augroup END
 
+fun! CsFixer()
+    " command to run: ./vendor/bin/php-cs-fixer fix -v {filename}
+    " echo expand("%")
+    exe '!./vendor/bin/php-cs-fixer fix -v ' . expand("%")
+    exe 'edit!'
+endfun
+
+fun! CsFixerSilent()
+    " command to run: ./vendor/bin/php-cs-fixer fix -v {filename}
+    " echo expand("%")
+    exe 'silent !./vendor/bin/php-cs-fixer fix -v ' . expand("%")
+    exe 'edit!'
+endfun
+
 " copy current file name (relative/absolute) to system clipboard (Linux version)
 if has("gui_gtk") || has("gui_gtk2") || has("gui_gnome") || has("unix")
   " relative path (src/foo.txt)
   nnoremap <leader>cp :let @+=expand("%")<CR>
 
   " absolute path (/something/src/foo.txt)
-  nnoremap <leader>cf :let @+=expand("%:p")<CR>
+  " nnoremap <leader>cf :let @+=expand("%:p")<CR>
 
   " filename (foo.txt)
   " nnoremap <leader>ct :let @+=expand("%:t")<CR>
@@ -977,7 +1018,7 @@ if has("gui_gtk") || has("gui_gtk2") || has("gui_gnome") || has("unix")
 endif
 
 " open current file in a new tmux pane
-noremap <Leader>v :call OpenCurrent()<CR>
+noremap <Leader>vs :call OpenCurrent()<CR>
 function! OpenCurrent()
     exe 'silent !tmux split-window -h -c "' . getcwd() . '" "nvim '. expand("%") .'"'
 endfunction
@@ -985,3 +1026,11 @@ endfunction
 " vim-commentary
 autocmd FileType yaml setlocal commentstring=#\ %s
 autocmd FileType php setlocal commentstring=//\ %s
+
+let g:ycm_gopls_binary_path="~/go/bin/gopls"
+let g:ycm_semantic_triggers = {
+  \   'go': [ 're!.' ],
+  \   'cpp': [ 're!.' ]
+  \ }
+
+noremap <Leader>m :MarkdownPreview<CR>
