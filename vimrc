@@ -19,11 +19,6 @@ nnoremap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
 nnoremap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
 nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
 
-" {{{ sdfasdfjk
-" hellow world
-" "}}}
-" vim-bootstrap 5268b45
-
 "*****************************************************************************
 "" Vim-PLug core
 "*****************************************************************************
@@ -421,7 +416,7 @@ set autoread
 
 "" Split
 noremap <Leader>h :<C-u>split<CR>
-" noremap <Leader>v :<C-u>vsplit<CR>
+noremap <Leader>v :<C-u>vsplit<CR>
 
 "" Git
 noremap <Leader>ga :Gwrite<CR>
@@ -543,17 +538,11 @@ let t:NERDTreeBufName = get(t:, '', "default")
 " close buffer and nerdtree if it is open
 " noremap <expr> <leader>c (bufwinnr(t:NERDTreeBufName) == 1 && bufname("") != "NERD_tree_1" && bufname("") != "NERD_tree_2"  ? ":NERDTreeClose\| bd!<CR>" : ":bd!<CR>" )
 "
-noremap <leader>q :bd!<CR>
+noremap <leader>q :bw!<CR>
 nnoremap <leader>qa :w <bar> %bd <bar> e# <bar> bd# <CR>
 
 "" Clean search (highlight)
 nnoremap <silent> <leader><space> :noh<cr>
-
-"" Switching windows
-noremap <C-j> <C-w>j
-noremap <C-k> <C-w>k
-noremap <C-l> <C-w>l
-noremap <C-h> <C-w>h
 
 "" Vmap for maintain Visual Mode after shifting > and <
 vmap < <gv
@@ -602,9 +591,15 @@ let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 let g:go_highlight_extra_types = 1
 
-" let g:go_gopls_enabled = 0
+let g:go_gopls_enabled = 0
+let g:go_def_mapping_enabled = 0
+
+"" YouCompleteMe Settings
 " let g:go_gopls_options = ['-remote=auto'] " share gopls instanse, save my ass
 " let g:ycm_gopls_args = ['-remote=auto']
+
+autocmd FileType go nnoremap gd :YcmCompleter GoTo<CR>
+autocmd FileType go nnoremap gf :YcmCompleter GoToReferences<CR>
 
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 
@@ -1019,10 +1014,10 @@ if has("gui_gtk") || has("gui_gtk2") || has("gui_gnome") || has("unix")
 endif
 
 " open current file in a new tmux pane
-noremap <Leader>vs :call OpenCurrent()<CR>
-function! OpenCurrent()
-    exe 'silent !tmux split-window -h -c "' . getcwd() . '" "nvim '. expand("%") .'"'
-endfunction
+" noremap <Leader>vs :call OpenCurrent()<CR>
+" function! OpenCurrent()
+"     exe 'silent !tmux split-window -h -c "' . getcwd() . '" "nvim '. expand("%") .'"'
+" endfunction
 
 " vim-commentary
 autocmd FileType yaml setlocal commentstring=#\ %s
@@ -1033,15 +1028,53 @@ autocmd FileType php setlocal commentstring=//\ %s
 "   \   'go': [ 're!.' ],
 "   \   'cpp': [ 're!.' ]
 "   \ }
+" let g:ycm_auto_trigger = 1
 
 noremap <Leader>m :MarkdownPreview<CR>
 
 " different cursor shape for different mode
-let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
-let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+if has('maxunix')
+    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+    let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+else
+    " if has("autocmd")
+    "   au VimEnter,InsertLeave * silent execute '!echo -ne "\e[2 q"' | redraw!
+    "     au InsertEnter,InsertChange *
+    "                 \ if v:insertmode == 'i' |
+    "                 \   silent execute '!echo -ne "\e[6 q"' | redraw! |
+    "                 \ elseif v:insertmode == 'r' |
+    "                 \   silent execute '!echo -ne "\e[4 q"' | redraw! |
+    "                 \ endif
+    "     au VimLeave * silent execute '!echo -ne "\e[ q"' | redraw!
+    " endif
+    if has("autocmd")
+      au VimEnter,InsertLeave * silent execute '!echo -ne "\e[1 q"' | redraw!
+      au InsertEnter,InsertChange *
+        \ if v:insertmode == 'i' |
+        \   silent execute '!echo -ne "\e[5 q"' | redraw! |
+        \ elseif v:insertmode == 'r' |
+        \   silent execute '!echo -ne "\e[3 q"' | redraw! |
+        \ endif
+      au VimLeave * silent execute '!echo -ne "\e[ q"' | redraw!
+    endif
+endif
+
+" let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+" let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+" let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
 
 set undodir=~/.vim/undo
 set undofile
 set undolevels=1000         " How many undos
 set undoreload=10000        " number of lines to save for undo
+
+
+" nnoremap <C-Up> :resize +5
+noremap <silent> <C-H> :vertical resize -5<CR>
+noremap <silent> <C-L> :vertical resize +5<CR>
+noremap <silent> <C-J> :resize -10<CR>
+noremap <silent> <C-K> :resize +10<CR>
+
+let g:phpactorPhpBin = '/usr/local/opt/php@7.3/bin/php'
+
