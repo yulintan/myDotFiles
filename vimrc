@@ -77,6 +77,11 @@ Plug 'vim-syntastic/syntastic'
 " Plug 'dense-analysis/ale'
 Plug 'janko/vim-test'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'mgedmin/python-imports.vim'
+" Plug 'cwood/vim-django'
+" Plug 'tweekmonster/django-plus.vim'
 
 
 "Language Server Protocol (LSP) support for vim and neovim.
@@ -428,7 +433,6 @@ noremap <Leader>gll :Gpull<CR>
 noremap <Leader>gs :Gstatus<CR>
 noremap <Leader>gb :Gblame<CR>
 noremap <Leader>gd :Gvdiff<CR>
-noremap <Leader>gr :Gremove<CR>
 
 " session management
 nnoremap <leader>so :OpenSession<Space>
@@ -493,7 +497,7 @@ let g:syntastic_python_checkers = ['python']
 let g:syntastic_php_checkers = ['php']
 
 let g:syntastic_go_checkers = ['golint', 'govet']
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go', 'html'] }
 
 
 " Tagbar
@@ -593,13 +597,44 @@ let g:go_highlight_extra_types = 1
 
 let g:go_gopls_enabled = 0
 let g:go_def_mapping_enabled = 0
+let g:go_info_mode = 'guru'
 
+
+" ***********************************************************************************
 "" YouCompleteMe Settings
-" let g:go_gopls_options = ['-remote=auto'] " share gopls instanse, save my ass
+" let g:go_gopls_options = ['-remote=auto'] " share gopls instanse
 " let g:ycm_gopls_args = ['-remote=auto']
 
 autocmd FileType go nnoremap gd :YcmCompleter GoTo<CR>
-autocmd FileType go nnoremap gf :YcmCompleter GoToReferences<CR>
+autocmd FileType go nnoremap gr :YcmCompleter GoToReferences<CR>
+
+autocmd FileType python nnoremap gd :YcmCompleter GoTo<CR>
+autocmd FileType python nnoremap gr :YcmCompleter GoToReferences<CR>
+
+autocmd FileType javascript nnoremap gd :YcmCompleter GoTo<CR>
+autocmd FileType javascript nnoremap gr :YcmCompleter GoToReferences<CR>
+
+let g:ycm_collect_identifiers_from_tags_files = 1 " Let YCM read tags from Ctags file
+let g:ycm_use_ultisnips_completer = 1 " Default 1, just ensure
+let g:ycm_seed_identifiers_with_syntax = 1 " Completion for programming language's keyword
+let g:ycm_complete_in_comments = 1 " Completion in comments
+let g:ycm_complete_in_strings = 1 " Completion in string
+let g:ycm_auto_hover = -1
+nmap <leader>i <plug>(YCMHover)
+
+" let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
+
+" ***********************************************************************************
+
+
+" ***********************************************************************************
+"" ultisnips Settings
+let g:UltiSnipsExpandTrigger="<c-j>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
+" ***********************************************************************************
 
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 
@@ -634,6 +669,11 @@ augroup go
 
 augroup END
 
+" python
+
+autocmd FileType python set sw=4
+autocmd FileType python set ts=4
+autocmd FileType python set sts=4
 
 " html
 " for html files, 2 spaces
@@ -782,7 +822,7 @@ map <Leader>vp :VimuxPromptCommand<CR>
 
 "leader b for build in go
 autocmd FileType go nmap <leader>b  <Plug>(go-build)
-autocmd FileType go nmap <Leader>i <Plug>(go-info)
+" autocmd FileType go nmap <Leader>i <Plug>(go-info)
 
 autocmd FileType go nmap <leader>ru :call GoRunMain()<CR>
 fun! GoRunMain() abort
@@ -801,20 +841,20 @@ nnoremap <leader>ie :GoIfErr <CR>
 hi Visual ctermbg=100
 
 " In ~/.vim/vimrc, or somewhere similar.
- let g:ale_fixers = {
- \   '*': ['remove_trailing_lines', 'trim_whitespace'],
- \   'javascript': ['eslint', 'importjs', 'prettier', 'prettier_eslint', 'prettier_standard', 'standard', 'xo'],
- \   'GO': ['gofmt', 'go build'],
- \   'python': ['autopep8','yapf', 'isort'],
- \}
- " In ~/.vim/vimrc, or somewhere similar.
- let g:ale_linters = {
- \   'javascript': ['eslint'],
- \   'go': ['gopls'],
- \   'python': ['flake8', 'pylint', 'bandit', 'isort'],
- \}
+ " let g:ale_fixers = {
+ " \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+ " \   'javascript': ['eslint', 'importjs', 'prettier', 'prettier_eslint', 'prettier_standard', 'standard', 'xo'],
+ " \   'GO': ['gofmt', 'go build'],
+ " \   'python': ['autopep8','yapf', 'isort'],
+ " \}
+ " " In ~/.vim/vimrc, or somewhere similar.
+ " let g:ale_linters = {
+ " \   'javascript': ['eslint'],
+ " \   'go': ['gopls'],
+ " \   'python': ['flake8', 'pylint', 'bandit', 'isort'],
+ " \}
 
-let g:ale_fix_on_save = 1
+" let g:ale_fix_on_save = 1
 " let g:ale_linters = {'go': ['gometalinter', 'gofmt']}
 
 
@@ -923,7 +963,7 @@ autocmd FileType php nmap <Leader>nn :call phpactor#Navigate()<CR>
 " Goto definition of class or class member under the cursor
 autocmd FileType php nnoremap gd :call phpactor#GotoDefinition()<CR>
 
-autocmd FileType php nnoremap gf :call phpactor#FindReferences()<CR>
+autocmd FileType php nnoremap gr :call phpactor#FindReferences()<CR>
 
 " Transform the classes in the current file
 autocmd FileType php nmap <Leader>tt :call phpactor#Transform()<CR>
@@ -1038,16 +1078,6 @@ if has('maxunix')
     let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
     let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
 else
-    " if has("autocmd")
-    "   au VimEnter,InsertLeave * silent execute '!echo -ne "\e[2 q"' | redraw!
-    "     au InsertEnter,InsertChange *
-    "                 \ if v:insertmode == 'i' |
-    "                 \   silent execute '!echo -ne "\e[6 q"' | redraw! |
-    "                 \ elseif v:insertmode == 'r' |
-    "                 \   silent execute '!echo -ne "\e[4 q"' | redraw! |
-    "                 \ endif
-    "     au VimLeave * silent execute '!echo -ne "\e[ q"' | redraw!
-    " endif
     if has("autocmd")
       au VimEnter,InsertLeave * silent execute '!echo -ne "\e[1 q"' | redraw!
       au InsertEnter,InsertChange *
@@ -1078,3 +1108,4 @@ noremap <silent> <C-K> :resize +10<CR>
 
 let g:phpactorPhpBin = '/usr/local/opt/php@7.3/bin/php'
 
+" let g:django_projects = '~/repo/ppr/core'
