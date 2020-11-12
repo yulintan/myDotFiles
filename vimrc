@@ -160,7 +160,7 @@ Plug 'thoughtbot/vim-rspec'
 Plug 'ecomba/vim-ruby-refactoring'
 
 
-Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install --no-dev -o'}
+" Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install --no-dev -o'}
 
 Plug 'zchee/vim-go-slide'
 Plug 'christianrondeau/vim-base64'
@@ -170,6 +170,7 @@ Plug 'hashivim/vim-terraform'
 Plug 'kshenoy/vim-signature'
 
 " Plug 'itchyny/lightline.vim'
+Plug 'pearofducks/ansible-vim', { 'do': './UltiSnips/generate.sh' }
 
 
 "*****************************************************************************
@@ -578,7 +579,7 @@ endfunction
 let g:go_list_type = "quickfix"
 let g:go_fmt_command = "goimports" " goimports is gofmt + auto import
 let g:go_fmt_options = {
-   \ 'goimports': '-local git-lab.boldapps.net',
+   \ 'goimports': '-local fortigit.com',
 \ }
 " let g:go_fmt_fail_silently = 1
 
@@ -607,6 +608,7 @@ let g:go_info_mode = 'guru'
 
 autocmd FileType go nnoremap gd :YcmCompleter GoTo<CR>
 autocmd FileType go nnoremap gr :YcmCompleter GoToReferences<CR>
+autocmd FileType go nnoremap gi :YcmCompleter GoToImplementation<CR>
 
 autocmd FileType python nnoremap gd :YcmCompleter GoTo<CR>
 autocmd FileType python nnoremap gr :YcmCompleter GoToReferences<CR>
@@ -1109,3 +1111,4 @@ noremap <silent> <C-K> :resize +10<CR>
 let g:phpactorPhpBin = '/usr/local/opt/php@7.3/bin/php'
 
 " let g:django_projects = '~/repo/ppr/core'
+let g:loaded_matchparen=0
