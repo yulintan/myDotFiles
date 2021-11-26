@@ -170,7 +170,7 @@ Plug 'hashivim/vim-terraform'
 Plug 'kshenoy/vim-signature'
 
 " Plug 'itchyny/lightline.vim'
-Plug 'pearofducks/ansible-vim', { 'do': './UltiSnips/generate.sh' }
+" Plug 'pearofducks/ansible-vim', { 'do': './UltiSnips/generate.sh' }
 
 
 "*****************************************************************************
@@ -432,7 +432,7 @@ noremap <Leader>gsh :Gpush<CR>
 noremap <Leader>gshf :Gpush -f<CR>
 noremap <Leader>gll :Gpull<CR>
 noremap <Leader>gs :Gstatus<CR>
-noremap <Leader>gb :Gblame<CR>
+noremap <Leader>gb :Git blame<CR>
 noremap <Leader>gd :Gvdiff<CR>
 
 " session management
@@ -1112,3 +1112,4 @@ let g:phpactorPhpBin = '/usr/local/opt/php@7.3/bin/php'
 
 " let g:django_projects = '~/repo/ppr/core'
 let g:loaded_matchparen=0
+
