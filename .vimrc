@@ -41,7 +41,7 @@ echo ""
 silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 let g:not_finish_vimplug = "yes"
 
-autocmd VimEnter * PlugInstall
+" autocmd VimEnter * PlugInstall
 endif
 
 let g:python_host_prog = 'user/bin/python'
@@ -68,7 +68,7 @@ Plug 'vim-scripts/CSApprox'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'Raimondi/delimitMate'
 Plug 'majutsushi/tagbar'
-Plug 'Yggdroot/indentLine'
+" Plug 'Yggdroot/indentLine'
 Plug 'avelino/vim-bootstrap-updater'
 Plug 'sheerun/vim-polyglot'  "conflict with vim-go https://github.com/fatih/vim-go/issues/2262
 Plug 'Valloric/YouCompleteMe'
@@ -160,7 +160,7 @@ Plug 'thoughtbot/vim-rspec'
 Plug 'ecomba/vim-ruby-refactoring'
 
 
-" Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install --no-dev -o'}
+Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install --no-dev -o'}
 
 Plug 'zchee/vim-go-slide'
 Plug 'christianrondeau/vim-base64'
@@ -387,7 +387,7 @@ endfunction
 endif
 
 "*****************************************************************************
-"" Autocmd Rules
+"" utocmd Rules
 "*****************************************************************************
 "" The PC is fast enough, do syntax highlight syncing from start unless 200 lines
 augroup vimrc-sync-fromstart
@@ -541,8 +541,6 @@ endif
 let t:NERDTreeBufName = get(t:, '', "default")
 
 " close buffer and nerdtree if it is open
-" noremap <expr> <leader>c (bufwinnr(t:NERDTreeBufName) == 1 && bufname("") != "NERD_tree_1" && bufname("") != "NERD_tree_2"  ? ":NERDTreeClose\| bd!<CR>" : ":bd!<CR>" )
-"
 noremap <leader>q :bw!<CR>
 nnoremap <leader>qa :w <bar> %bd <bar> e# <bar> bd# <CR>
 
@@ -1021,10 +1019,10 @@ let g:php_cs_fixer_path = "/Users/yulin/dev/cashier/back-end/vendor/bin/php-cs-f
 let g:php_cs_fixer_verbose = 0                    " Return the output of command if 1, else an inline information.
 let g:php_cs_fixer_dry_run = 0                    " Call command with dry-run option
 nnoremap <silent><leader>pcf :call PhpCsFixerFixFile()<CR>
-augroup php-cs-fixer-autogroup
-    autocmd!
-    autocmd BufWritePost * if getcwd() == '/Users/yulin/dev/cashier/back-end' && expand('%:e') == 'php' | silent call PhpCsFixerFixFile() | endif
-augroup END
+" augroup php-cs-fixer-autogroup
+"     autocmd!
+"     autocmd BufWritePost * if getcwd() == '/Users/yulin/dev/cashier/back-end' && expand('%:e') == 'php' | silent call PhpCsFixerFixFile() | endif
+" augroup END
 
 fun! CsFixer()
     " command to run: ./vendor/bin/php-cs-fixer fix -v {filename}
@@ -1108,7 +1106,8 @@ noremap <silent> <C-L> :vertical resize +5<CR>
 noremap <silent> <C-J> :resize -10<CR>
 noremap <silent> <C-K> :resize +10<CR>
 
-let g:phpactorPhpBin = '/usr/local/opt/php@7.3/bin/php'
+" let g:phpactorPhpBin = '/usr/local/opt/php@7.3/bin/php'
+let g:phpactorPhpBin = '/opt/homebrew/opt/php@7.4/bin/php'
 
 " let g:django_projects = '~/repo/ppr/core'
 let g:loaded_matchparen=0
